@@ -14,7 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\MediaCannotBeDeleted;
 
-class BlogController extends Controller
+class MyBlogController extends Controller
 {
     /**
      * Display a listing of the resource.
