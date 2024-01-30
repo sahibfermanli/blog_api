@@ -27,6 +27,7 @@ class BlogController extends Controller
         $data = $request->validated();
 
         $items = Blog::query()
+            ->where('created_by', auth()->user()->id)
             ->with(['created_user', 'media'])
             ->orderByDesc('id')
             ->paginate($data['limit'] ?? 10);

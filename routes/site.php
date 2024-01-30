@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Site\Auth\LoginController;
 use App\Http\Controllers\Api\Site\Auth\LogoutController;
 use App\Http\Controllers\Api\Site\Auth\RegisterController;
 use App\Http\Controllers\Api\Site\BlogController;
+use App\Http\Middleware\Api\BlogMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([])->group(static function () {
@@ -20,7 +21,7 @@ Route::middleware([])->group(static function () {
         Route::post("logout", [LogoutController::class, 'logout']);
         Route::post("logout-all", [LogoutController::class, 'logout_all']);
 
-        Route::group(['prefix' => 'blogs'], static function () {
+        Route::group(['prefix' => 'blogs', 'middleware' => [BlogMiddleware::class]], static function () {
             Route::get('load', [BlogController::class, 'index']);
             Route::get('show/{blog}', [BlogController::class, 'show']);
             Route::post('add', [BlogController::class, 'store']);
