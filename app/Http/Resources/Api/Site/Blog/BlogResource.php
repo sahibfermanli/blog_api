@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api\Site\Blog;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -12,6 +13,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $description
  * @property mixed $body
  * @property mixed $images
+ * @property mixed $created_user
+ * @property mixed $created_at
  */
 class BlogResource extends JsonResource
 {
@@ -24,13 +27,17 @@ class BlogResource extends JsonResource
 
     public function toArray(Request $request): array
     {
+        $created_user = $this->created_user;
+        $created_by = $created_user?->name . ' ' . $created_user?->surname;
+
         return [
             'id' => $this->id,
-            'images' => $this->images,
+            'images' => data_get($this->images, '*.url'),
             'title' => $this->title,
             'description' => $this->description,
             'body' => $this->body,
-            'is_active' => $this->is_active,
+            'created_by' => blank($created_by) ? '---' : $created_by,
+            'created_date' => Carbon::parse($this->created_at)->longRelativeDiffForHumans(),
         ];
     }
 }

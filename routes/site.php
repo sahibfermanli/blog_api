@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Site\Auth\LoginController;
 use App\Http\Controllers\Api\Site\Auth\LogoutController;
 use App\Http\Controllers\Api\Site\Auth\RegisterController;
+use App\Http\Controllers\Api\Site\BlogController;
 use App\Http\Controllers\Api\Site\MyBlogController;
 use App\Http\Middleware\Api\BlogMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,11 @@ Route::middleware([])->group(static function () {
             Route::post('update/{blog}', [MyBlogController::class, 'update']);
             Route::delete('delete/{blog}', [MyBlogController::class, 'destroy']);
             Route::delete('/delete/image/{blog}/{media_id}', [MyBlogController::class, 'destroyImage'])->name('destroy_image');
+        });
+
+        Route::group(['prefix' => 'blogs'], static function () {
+            Route::get('load', [BlogController::class, 'index']);
+            Route::get('show/{blog}', [BlogController::class, 'show']);
         });
     });
 });

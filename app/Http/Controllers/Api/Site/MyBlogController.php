@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\GeneralListRequest;
 use App\Http\Requests\Api\Site\Blog\BlogStoreRequest;
 use App\Http\Resources\Api\GeneralResource;
-use App\Http\Resources\Api\Site\Blog\BlogResource;
+use App\Http\Resources\Api\Site\Blog\MyBlogResource;
 use App\Http\Resources\Api\Site\Blog\BlogsResource;
 use App\Models\Blog;
 use App\Services\FileUpload;
@@ -35,9 +35,9 @@ class MyBlogController extends Controller
         return BlogsResource::collection($items);
     }
 
-    public function show(Blog $blog): BlogResource
+    public function show(Blog $blog): MyBlogResource
     {
-        return BlogResource::make($blog);
+        return MyBlogResource::make($blog);
     }
 
     /**

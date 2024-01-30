@@ -6,16 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property mixed $title_az
- * @property mixed $created_user
- * @property mixed $created_at
- * @property mixed $id
- * @property mixed $is_active
- * @property mixed $images
  * @property mixed $title
+ * @property mixed $is_active
+ * @property mixed $id
  * @property mixed $description
+ * @property mixed $body
+ * @property mixed $images
  */
-class BlogsResource extends JsonResource
+class MyBlogResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -26,17 +24,13 @@ class BlogsResource extends JsonResource
 
     public function toArray(Request $request): array
     {
-        $created_user = $this->created_user;
-        $created_by = $created_user?->name . ' ' . $created_user?->surname;
-
         return [
             'id' => $this->id,
+            'images' => $this->images,
             'title' => $this->title,
-            'image' => $this->images[0]['url'] ?? null,
             'description' => $this->description,
+            'body' => $this->body,
             'is_active' => $this->is_active,
-            'created_by' => blank($created_by) ? '---' : $created_by,
-            'created_date' => $this->created_at?->toDateTimeString(),
         ];
     }
 }
