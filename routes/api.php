@@ -1,8 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +11,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\Api\GeneralAccessMiddleware;
+
+Route::middleware([GeneralAccessMiddleware::class])->group(static function () {
+    require_once 'site.php';
+    require_once 'admin.php';
 });
