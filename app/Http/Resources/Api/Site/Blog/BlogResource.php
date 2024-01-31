@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api\Site\Blog;
 
+use App\Http\Resources\Api\Site\Comments\CommentsResource;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -15,6 +16,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $images
  * @property mixed $created_user
  * @property mixed $created_at
+ * @property mixed $comments
  */
 class BlogResource extends JsonResource
 {
@@ -38,6 +40,7 @@ class BlogResource extends JsonResource
             'body' => $this->body,
             'created_by' => blank($created_by) ? '---' : $created_by,
             'created_date' => Carbon::parse($this->created_at)->longRelativeDiffForHumans(),
+            'comments' => CommentsResource::collection($this->comments),
         ];
     }
 }

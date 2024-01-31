@@ -28,7 +28,8 @@ class MyBlogController extends Controller
 
         $items = Blog::query()
             ->where('created_by', auth()->user()->id)
-            ->with(['created_user', 'media'])
+            ->with(['created_user', 'media', 'comments'])
+            ->withCount('comments')
             ->orderByDesc('id')
             ->paginate($data['limit'] ?? 10);
 

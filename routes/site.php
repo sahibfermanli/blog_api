@@ -34,6 +34,7 @@ Route::middleware([])->group(static function () {
         Route::group(['prefix' => 'blogs'], static function () {
             Route::get('load', [BlogController::class, 'index']);
             Route::get('show/{blog}', [BlogController::class, 'show']);
+            Route::post('{blog}/comments/add', [BlogController::class, 'addComment']);
         });
     });
 });
