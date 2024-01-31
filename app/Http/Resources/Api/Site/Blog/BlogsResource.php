@@ -38,7 +38,7 @@ class BlogsResource extends JsonResource
             'image' => $this->images[0]['url'] ?? null,
             'description' => $this->description,
             'comments_count' => $this->comments_count,
-            'is_active' => $this->is_active,
+            'is_active' => (bool) $this->is_active,
             'created_by' => blank($created_by) ? '---' : $created_by,
             'created_date' => $this->created_at?->toDateTimeString(),
             'comments' => CommentsResource::collection($this->comments),

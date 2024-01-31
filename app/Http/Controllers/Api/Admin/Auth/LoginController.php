@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Api\Site\Auth;
+namespace App\Http\Controllers\Api\Admin\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Site\Auth\ChangePasswordRequest;
-use App\Http\Requests\Api\Site\Auth\LoginRequest;
+use App\Http\Requests\Api\Admin\Auth\ChangePasswordRequest;
+use App\Http\Requests\Api\Admin\Auth\LoginRequest;
+use App\Http\Resources\Api\Admin\UserResource;
 use App\Http\Resources\Api\GeneralResource;
-use App\Http\Resources\Api\Site\UserResource;
-use App\Models\User;
-use App\Services\UserService;
+use App\Models\Admin;
+use App\Services\AdminService;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
@@ -20,7 +20,7 @@ class LoginController extends Controller
     {
         $fields = $request->validated();
 
-        $user = User::query()
+        $user = Admin::query()
             ->where('email', $fields['email'])
             ->first();
 
@@ -30,7 +30,7 @@ class LoginController extends Controller
             ], 401));
         }
 
-        return UserService::instance()->create_token($user, $fields['device_type']);
+        return AdminService::instance()->create_token($user, $fields['device_type']);
     }
 
     public function change_password(ChangePasswordRequest $request): GeneralResource
@@ -41,7 +41,7 @@ class LoginController extends Controller
 
         PersonalAccessToken::query()
             ->where('tokenable_id', auth()->id())
-            ->where('tokenable_type', User::class)
+            ->where('tokenable_type', Admin::class)
             ->where('id', '<>', $current_token_id)
             ->delete();
 

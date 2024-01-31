@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Api\Site;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\GeneralListRequest;
 use App\Http\Requests\Api\Site\Blog\BlogStoreRequest;
-use App\Http\Resources\Api\GeneralResource;
 use App\Http\Resources\Api\Site\Blog\MyBlogResource;
-use App\Http\Resources\Api\Site\Blog\BlogsResource;
 use App\Models\Blog;
-use App\Services\FileUpload;
+use App\Services\BlogService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\MediaCannotBeDeleted;
@@ -26,19 +24,12 @@ class MyBlogController extends Controller
     {
         $data = $request->validated();
 
-        $items = Blog::query()
-            ->where('created_by', auth()->user()->id)
-            ->with(['created_user', 'media', 'comments'])
-            ->withCount('comments')
-            ->orderByDesc('id')
-            ->paginate($data['limit'] ?? 10);
-
-        return BlogsResource::collection($items);
+        return BlogService::instance()->getAllBlogs($request->validated(), true);
     }
 
     public function show(Blog $blog): MyBlogResource
     {
-        return MyBlogResource::make($blog);
+        return BlogService::instance()->showMyBlog($blog);
     }
 
     /**
@@ -49,13 +40,7 @@ class MyBlogController extends Controller
      */
     public function store(BlogStoreRequest $request): JsonResponse
     {
-        $blog = Blog::query()->create($request->validated());
-
-        $file_upload = FileUpload::multipleUpload($request, 'images', 'blogs', $blog);
-
-        return response()->json(GeneralResource::make([
-            'message' => 'New item added successfully!' . $file_upload,
-        ]));
+        return BlogService::instance()->store($request);
     }
 
     /**
@@ -67,16 +52,7 @@ class MyBlogController extends Controller
      */
     public function update(BlogStoreRequest $request, Blog $blog): JsonResponse
     {
-        $validated = $request->validated();
-        $validated['is_active'] = false;
-
-        $blog->update($validated);
-
-        $file_upload = FileUpload::multipleUpload($request, 'images', 'blogs', $blog);
-
-        return response()->json(GeneralResource::make([
-            'message' => 'Selected item updated successfully!' . $file_upload,
-        ]));
+        return BlogService::instance()->update($request, $blog);
     }
 
     /**
@@ -87,11 +63,7 @@ class MyBlogController extends Controller
      */
     public function destroy(Blog $blog): JsonResponse
     {
-        $blog->delete();
-
-        return response()->json(GeneralResource::make([
-            'message' => 'Selected item deleted successfully!',
-        ]));
+        return BlogService::instance()->destroy($blog);
     }
 
     /**
@@ -99,11 +71,6 @@ class MyBlogController extends Controller
      */
     public function destroyImage(Blog $blog, $media_id): JsonResponse
     {
-        $blog->deleteMedia($media_id);
-        $blog->update(['is_active' => false]);
-
-        return response()->json(GeneralResource::make([
-            'message' => 'Selected media file deleted successfully!',
-        ]));
+        return BlogService::instance()->destroyImage($blog, $media_id);
     }
 }

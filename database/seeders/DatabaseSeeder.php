@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ApiTokenSeeder::class,
             SuperUserSeeder::class,
+            SuperAdminSeeder::class,
         ]);
     }
 }
