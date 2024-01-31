@@ -8,6 +8,7 @@ use App\Traits\CreatedBy;
 use App\Traits\IsActive;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -67,5 +68,12 @@ class User extends Authenticatable
     public function blogs(): HasMany
     {
         return $this->hasMany(Blog::class, 'created_by', 'id')->orderByDesc('blogs.id');
+    }
+
+    public function chats(): BelongsToMany
+    {
+        return $this->belongsToMany(Chat::class, ChatUser::class)
+            ->withPivot(['user_id'])
+            ->whereNull('chat_users.deleted_at');
     }
 }

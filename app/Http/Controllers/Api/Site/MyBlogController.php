@@ -22,8 +22,6 @@ class MyBlogController extends Controller
      */
     public function index(GeneralListRequest $request): AnonymousResourceCollection
     {
-        $data = $request->validated();
-
         return BlogService::instance()->getAllBlogs($request->validated(), true);
     }
 

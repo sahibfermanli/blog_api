@@ -1,18 +1,16 @@
 <?php
 
-namespace App\Http\Resources\Api\Site;
+namespace App\Http\Resources\Api\Site\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
+ * @property mixed $id
  * @property mixed $name
  * @property mixed $surname
- * @property mixed $token
- * @property mixed $email
- * @property mixed $id
  */
-class UserResource extends JsonResource
+class UsersListResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -25,16 +23,7 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'surname' => $this->surname,
-            'email' => $this->email,
-        ];
-    }
-
-    public function with($request): array
-    {
-        return [
-            'token' => $this->token,
+            'title' => $this->name . ' ' . $this->surname,
         ];
     }
 }

@@ -11,8 +11,11 @@
 |
 */
 
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\Api\GeneralAccessMiddleware;
+
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
 Route::middleware([GeneralAccessMiddleware::class])->group(static function () {
     require_once 'site.php';
