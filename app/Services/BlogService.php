@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Http\Resources\Api\GeneralResource;
 use App\Http\Resources\Api\Site\Blog\BlogResource;
 use App\Http\Resources\Api\Site\Blog\BlogsResource;
+use App\Http\Resources\Api\Site\Blog\BlogsStatisticsResource;
 use App\Http\Resources\Api\Site\Blog\MyBlogResource;
 use App\Http\Resources\Api\Site\Comments\CommentsResource;
 use App\Models\Blog;
@@ -130,5 +131,28 @@ class BlogService
         return response()->json(GeneralResource::make([
             'message' => 'Status changed successfully!',
         ]));
+    }
+
+    public function allBlogsCount(bool $onlyActives = false): int
+    {
+        return Blog::query()
+            ->when($onlyActives, function ($query) {
+                $query->active();
+            })
+            ->count();
+    }
+
+    public function getTopCommentedBlogs(int $limit = 5, bool $onlyActives = false): AnonymousResourceCollection
+    {
+        $items = Blog::query()
+            ->when($onlyActives, function ($query) {
+                $query->active();
+            })
+            ->withCount('comments')
+            ->orderByDesc('comments_count')
+            ->take($limit)
+            ->get();
+
+        return BlogsStatisticsResource::collection($items);
     }
 }

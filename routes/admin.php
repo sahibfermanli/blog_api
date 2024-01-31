@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Admin\Auth\LoginController;
 use App\Http\Controllers\Api\Admin\Auth\LogoutController;
 use App\Http\Controllers\Api\Admin\BlogController;
+use App\Http\Controllers\Api\Admin\StatisticsController;
 use App\Http\Controllers\Api\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,8 @@ Route::middleware([])->prefix('admin')->group(static function () {
 
         Route::post("logout", [LogoutController::class, 'logout']);
         Route::post("logout-all", [LogoutController::class, 'logout_all']);
+
+        Route::get("statistics", [StatisticsController::class, 'index']);
 
         Route::group(['prefix' => 'blogs'], static function () {
             Route::get('load', [BlogController::class, 'index']);

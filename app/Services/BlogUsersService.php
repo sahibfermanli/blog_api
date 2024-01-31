@@ -65,4 +65,13 @@ class BlogUsersService
             'message' => 'Selected item deleted successfully!',
         ]));
     }
+
+    public function allUsersCount(bool $onlyActives = false): int
+    {
+        return User::query()
+            ->when($onlyActives, function ($query) {
+                $query->active();
+            })
+            ->count();
+    }
 }

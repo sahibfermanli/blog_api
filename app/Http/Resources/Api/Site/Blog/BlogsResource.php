@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property mixed $title_az
  * @property mixed $created_user
  * @property mixed $created_at
  * @property mixed $id
