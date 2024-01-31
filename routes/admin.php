@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Admin\Auth\LoginController;
 use App\Http\Controllers\Api\Admin\Auth\LogoutController;
 use App\Http\Controllers\Api\Admin\BlogController;
+use App\Http\Controllers\Api\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([])->prefix('admin')->group(static function () {
@@ -22,6 +23,12 @@ Route::middleware([])->prefix('admin')->group(static function () {
             Route::get('show/{blog}', [BlogController::class, 'show']);
             Route::delete('delete/{blog}', [BlogController::class, 'destroy']);
             Route::put('change-active-status/{blog}', [BlogController::class, 'changeActiveStatus']);
+        });
+
+        Route::group(['prefix' => 'users'], static function () {
+            Route::get('load', [UserController::class, 'index']);
+            Route::delete('delete/{user}', [UserController::class, 'destroy']);
+            Route::put('change-active-status/{user}', [UserController::class, 'changeActiveStatus']);
         });
     });
 });

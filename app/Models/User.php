@@ -5,8 +5,10 @@ namespace App\Models;
 use App\Casts\User\PasswordCast;
 use App\Traits\ActionBy;
 use App\Traits\CreatedBy;
+use App\Traits\IsActive;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,10 +17,11 @@ use Laravel\Sanctum\HasApiTokens;
 /**
  * @property $store
  * @property string|mixed $token
+ * @property mixed $is_active
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, ActionBy, CreatedBy, CascadeSoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, ActionBy, CreatedBy, CascadeSoftDeletes, IsActive;
 
     /**
      * The attributes that are mass assignable.
@@ -30,6 +33,7 @@ class User extends Authenticatable
         'surname',
         'email',
         'password',
+        'is_active',
         'created_by',
     ];
 
@@ -53,5 +57,15 @@ class User extends Authenticatable
         'password' => PasswordCast::class,
     ];
 
-    protected array $cascadeDeletes = ['tokens'];
+    protected array $cascadeDeletes = ['tokens', 'blogs', 'comments'];
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class, 'created_by', 'id')->orderByDesc('comments.id');
+    }
+
+    public function blogs(): HasMany
+    {
+        return $this->hasMany(Blog::class, 'created_by', 'id')->orderByDesc('blogs.id');
+    }
 }
